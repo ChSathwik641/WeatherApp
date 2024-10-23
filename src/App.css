@@ -1,0 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+.input {
+  display: flex;
+  border: 1px solid black;
+  border-radius: 40px;
+  overflow: hidden;
+}
+
+.input input {
+  flex-grow: 1;
+  border: none;
+  padding: 10px;
+  outline: none;
+  border-radius: 40px 0 0 40px;
+}
+
+.input button {
+  background-color: #1d4ed8;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 0 40px 40px 0;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.img {
+  width: 40px;
+}
