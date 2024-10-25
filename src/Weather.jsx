@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import "./App.css";
 
-const weatherKey = "ea13cf2c5f9446e69a754508242110";
+const weatherKey = "3c4183720e3642d29e4133418242510";
 const openWeatherKey = "aa83e44fed66fcea8d5ffb46e9645fb6";
 const weatherBaseUrl = "https://api.weatherapi.com/v1/";
 const openWeatherBaseUrl = "https://api.openweathermap.org/data/2.5/";
@@ -107,7 +107,7 @@ const Weather = () => {
     setLoading(true);
     try {
       const currentUrl = `${weatherBaseUrl}current.json?key=${weatherKey}&q=${inputLocation}`;
-      const forecastUrl = `${weatherBaseUrl}forecast.json?key=${weatherKey}&q=${inputLocation}&days=10&hour=1`;
+      const forecastUrl = `${weatherBaseUrl}forecast.json?key=${weatherKey}&q=${inputLocation}&days=10&hour=2`;
       const historicalUrl = Array.from({ length: 10 }, (_, i) => {
         const date = new Date();
         date.setDate(date.getDate() - i - 1);
@@ -224,99 +224,170 @@ const Weather = () => {
       )}
       {error && <p>{error}</p>}
 
-      <div className="flex mt-300">
+      <div className="flex justify-evenly items-center mt-4 ml-0 pt-10">
         {weatherData && weatherData.forecast && (
-          <div>
-            <h3 className="text-2xl font-semibold mb-2">
-              Forecast for Next 10 Days
-            </h3>
-            {weatherData.forecast.map((forc, index) => (
-              <div key={index}>
-                <p>Date: {forc.date}</p>
-                <p>Min Temp: {forc.day.mintemp_c}°C</p>
-                <p>Max Temp: {forc.day.maxtemp_c}°C</p>
-                <div>
-                  <img
-                    src={`https:${forc.day.condition.icon}`}
-                    alt="Weather icon"
-                    className="weather-icon"
-                  />
-                  <p>Condition: {forc.day.condition.text}</p>
+          <div className="flex-grid justify-start items-center">
+            <div className="flex justify-center items-center">
+              <h1 className="text-lg mb-2">
+                Forecast in {weatherData.location.name} for next 10 days
+              </h1>
+            </div>
+            <div
+              className={`h-96 overflow-y-auto custom-scrollbar rounded-lg shadow-lg ${
+                isDarkMode
+                  ? "bg-gray-800 text-gray-100"
+                  : "bg-gray-100 text-gray-900"
+              }`}
+            >
+              {weatherData.forecast.map((forc, index) => (
+                <div
+                  key={index}
+                  className="flex justify-around items-center p-2 mb-2 h-auto"
+                >
+                  <p> {forc.date}</p>
+                  <div className="grid place-items-center ">
+                    <img
+                      src={`https:${forc.day.condition.icon}`}
+                      alt="Weather icon"
+                      className="weather-icon flex"
+                    />
+                    <p> {forc.day.condition.text}</p>
+                  </div>
+                  <div>
+                    {" "}
+                    <p> {forc.day.maxtemp_c}°C</p>
+                    <p> {forc.day.mintemp_c}°C</p>
+                  </div>
+                  <p>Rain: {forc.day.daily_chance_of_rain}%</p>
+                  {forc.day.daily_chance_of_snow > 0 && (
+                    <p>Snow: {forc.day.daily_chance_of_snow}%</p>
+                  )}
                 </div>
-                <p>Chance of Rain: {forc.day.daily_chance_of_rain}%</p>
-                {forc.day.daily_chance_of_snow > 0 && (
-                  <p>Chance of Snow: {forc.day.daily_chance_of_snow}%</p>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 
-        {weatherData && (
-          <div className="m-16 p-10">
-            <div>
-              <p>Weather results for {weatherData.location.name}</p>
-              <div>{days[day]}</div>
-            </div>
-            <div>
-              <h3 className="text-2xl font-semibold mb-2">Current Weather</h3>
-              <p>Temperature: {weatherData.current.temp_c} °C</p>
-              <div>
-                <img
-                  src={`https:${weatherData.current.condition.icon}`}
-                  alt="Weather icon"
-                  className="weather-icon"
-                />
+        <div className="pl-5 pr-2">
+          {weatherData && (
+            <div className="m-16 p-10">
+              <div className="grid place-items-center text-xl font-semibold">
+                <p className="pb-1">
+                  Weather results for {weatherData.location.name}
+                </p>
+                <p className="pb-1">{days[day]}</p>
+                <p className="pb-1">{weatherData.current.last_updated}</p>
               </div>
-              <p>Condition: {weatherData.current.condition.text}</p>
-              <p>Humidity: {weatherData.current.humidity} %</p>
-              <p>Wind: {weatherData.current.wind_kph} kph</p>
-              <p>Wind Direction:{weatherData.current.wind_dir}</p>
-              <p>Wind Degree : {weatherData.current.wind_degree}</p>
-              <p>Feelslike: {weatherData.current.feelslike_c}</p>
+              <div
+                className={`grid place-items-center m-1.5 p-4 rounded-lg shadow-lg ${
+                  isDarkMode
+                    ? "bg-gray-800 text-gray-100"
+                    : "bg-gray-100 text-gray-900"
+                }`}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="grid place-items-center">
+                    <img
+                      src={`https:${weatherData.current.condition.icon}`}
+                      alt="Weather icon"
+                      style={{ width: "120px", height: "120px" }}
+                    />
+                    <p className="text-4x1">
+                      {" "}
+                      {weatherData.current.condition.text}
+                    </p>
+                  </div>
+                  <div className="text-7xl">
+                    <p>{weatherData.current.temp_c} °C</p>
+                  </div>
+                </div>
+                <div className="mt-5">
+                  <p className="p1">
+                    🌅{weatherData.forecast[0].astro.sunrise}
+                  </p>
+                  <p className="p1">🌇{weatherData.forecast[0].astro.sunset}</p>
+                  <p className="p-1">
+                    Feelslike: {weatherData.current.feelslike_c}
+                  </p>
+                  <p className="p-1">
+                    Rain: {weatherData.forecast[0].day.daily_chance_of_rain}%
+                  </p>
+                  <p className="p-1">
+                    Humidity: {weatherData.current.humidity} %
+                  </p>
+                  <p className="p-1">
+                    Wind: {weatherData.current.wind_kph} kph
+                  </p>
+                  <p className="p-1">
+                    Wind Direction:{weatherData.current.wind_dir}
+                  </p>
+                  <p>Wind Degree : {weatherData.current.wind_degree}</p>
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {weatherData && weatherData.past && (
-          <div>
-            <h3 className="text-2xl font-semibold mb-2">
-              Weather Data in Past 10 Days
-            </h3>
-            {weatherData.past.map((pastDay, index) => (
-              <div key={index}>
-                <p>Date: {pastDay.date}</p>
-                <p>Min Temp: {pastDay.day.mintemp_c}°C</p>
-                <p>Max Temp: {pastDay.day.maxtemp_c}°C</p>
-                <div>
-                  <img
-                    src={`https:${pastDay.day.condition.icon}`}
-                    alt="Weather icon"
-                    className="weather-icon"
-                  />
-                  <p>Condition: {pastDay.day.condition.text}</p>
+          <div className="flex-grid justify-start items-center">
+            <div className="flex justify-center items-center">
+              <h1 className="text-lg mb-2">
+                Forecast in {weatherData.location.name} for past 10 days
+              </h1>
+            </div>
+            <div
+              className={`h-96 overflow-y-auto custom-scrollbar rounded-lg shadow-lg ${
+                isDarkMode
+                  ? "bg-gray-800 text-gray-100"
+                  : "bg-gray-100 text-gray-900"
+              }`}
+            >
+              {weatherData.past.map((pastDay, index) => (
+                <div
+                  key={index}
+                  className="flex justify-around items-center p-2 mb-2"
+                >
+                  <p>{pastDay.date}</p>
+                  <div className="grid place-items-center ">
+                    <img
+                      src={`https:${pastDay.day.condition.icon}`}
+                      alt="Weather icon"
+                      className="weather-icon"
+                    />
+                    <p> {pastDay.day.condition.text}</p>
+                  </div>
+                  <div>
+                    {" "}
+                    <p> {pastDay.day.mintemp_c}°C</p>
+                    <p> {pastDay.day.maxtemp_c}°C</p>
+                  </div>
+
+                  <p>Rain:{pastDay.day.daily_chance_of_rain}%</p>
+                  {pastDay.day.daily_chance_of_snow > 0 && (
+                    <p> {pastDay.day.daily_chance_of_snow}%</p>
+                  )}
                 </div>
-                <p>Chance of Rain: {pastDay.day.daily_chance_of_rain}%</p>
-                {pastDay.day.daily_chance_of_snow > 0 && (
-                  <p>Chance of Snow: {pastDay.day.daily_chance_of_snow}%</p>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </div>
       {hourlyData && (
         <div>
-          <h3 className="text-2xl font-semibold mb-2">
-            Weather Forecast for next 48hours in {weatherData.location.name}
+          <h3 className="text-lg mb-2">
+            Weather Forecast in {weatherData.location.name} for next 48hours
           </h3>
-          <div className="grid grid-cols-3 gap-4 col">
+          <div
+            className={`flex overflow-x-auto custom-scrollbar rounded-lg shadow-lg ${
+              isDarkMode
+                ? "bg-gray-800 text-gray-100"
+                : "bg-gray-100 text-gray-900"
+            }`}
+          >
             {hourlyData.map((hour, index) => (
               <div key={index} className="p-4 border rounded-lg">
-                <p>DateTime: {hour.dateTime}</p>
-                <p>Temperature: {hour.temperature} °C</p>
-                <p>Humidity: {hour.humidity} %</p>
-
+                <p>{hour.dateTime}</p>
+                <p>{hour.temperature} °C</p>
                 <div className="img">
                   {hour.precipitationType === "Clouds" && (
                     <img src="./clouds.png" alt="Clouds" />
@@ -343,6 +414,7 @@ const Weather = () => {
                     <img src="./snow.png" alt="Snow" />
                   )}
                   <p> {hour.precipitationType}</p>
+                  <p>Humidity: {hour.humidity} %</p>
                 </div>
               </div>
             ))}
